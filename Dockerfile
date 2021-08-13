@@ -68,27 +68,27 @@ ENV PYTHONPATH /rootfr/root/lib
 # is "bind" from the host computer 
 RUN git clone -b v2.4.6 --single-branch https://github.com/claralasa/eudaq.git \ 
   && cd eudaq \ 
-  && mkdir -p /eudaq/eudaq/extern/ZestSC1 \ 
-  && mkdir -p /eudaq/eudaq/extern/tlufirmware
+  && mkdir -p /eudaq/eudaq/ZestSC1 \ 
+  && mkdir -p /eudaq/eudaq/tlufirmware
 
 # COPY The needed files for the TLU and pxar (CMS phase one pixel)
-COPY ZestSC1.tar.gz /eudaq/eudaq/extern/ZestSC1.tar.gz
-COPY tlufirmware.tar.gz /eudaq/eudaq/extern/tlufirmware.tar.gz
-COPY libftd2xx-x86_64-1.4.22.tgz /eudaq/eudaq/extern/libftd2xx-x86_64-1.4.22.tgz
+COPY ZestSC1.tar.gz /eudaq/eudaq/ZestSC1.tar.gz
+COPY tlufirmware.tar.gz /eudaq/eudaq/tlufirmware.tar.gz
+COPY libftd2xx-x86_64-1.4.22.tgz /eudaq/eudaq/libftd2xx-x86_64-1.4.22.tgz
 
 # Untar files and continue with the compilation
 RUN cd /eudaq/eudaq \ 
-  && tar xzf extern/ZestSC1.tar.gz -C extern && rm extern/ZestSC1.tar.gz \
-  && tar xzf extern/tlufirmware.tar.gz -C extern && rm extern/tlufirmware.tar.gz \
+  && tar xzf ZestSC1.tar.gz && rm ZestSC1.tar.gz \
+  && tar xzf tlufirmware.tar.gz && rm tlufirmware.tar.gz \
   # The pxar library for CMS phase I pixel
-  && tar xzf extern/libftd2xx-x86_64-1.4.22.tgz -C extern \
-  && mv extern/release extern/libftd2xx-x86_64-1.4.22 && rm extern/libftd2xx-x86_64-1.4.22.tgz \ 
-  && cp extern/libftd2xx-x86_64-1.4.22/build/libftd2xx.* /usr/local/lib/ \
+  && tar xzf libftd2xx-x86_64-1.4.22.tgz \
+  && mv release libftd2xx-x86_64-1.4.22 && rm libftd2xx-x86_64-1.4.22.tgz \ 
+  && cp libftd2xx-x86_64-1.4.22/build/libftd2xx.* /usr/local/lib/ \
   && chmod 0755 /usr/local/lib/libftd2xx.so.1.4.22 \
   && ln -sf /usr/local/lib/libftd2xx.so.1.4.22 /usr/local/lib/libftd2xx.so \
-  && cp extern/libftd2xx-x86_64-1.4.22/*.h /usr/local/include/ \ 
-  && git clone https://github.com/psi46/pixel-dtb-firmware extern/pixel-dtb-firmare \ 
-  && git clone https://github.com/psi46/pxar.git extern/pxar && cd extern/pxar && git checkout production \ 
+  && cp libftd2xx-x86_64-1.4.22/*.h /usr/local/include/ \ 
+  && git clone https://github.com/psi46/pixel-dtb-firmware pixel-dtb-firmare \ 
+  && git clone https://github.com/psi46/pxar.git pxar && cd pxar && git checkout production \ 
   && mkdir -p build && cd build && cmake .. && make -j4 install \ 
   && cd /eudaq/eudaq \ 
   # End pxar library 
@@ -98,7 +98,7 @@ RUN cd /eudaq/eudaq \
   && make -j4 install
 # STOP ONLY FOR PRODUCTION
 
-ENV PXARPATH="/eudaq/eudaq/extern/pxar"
+ENV PXARPATH="/eudaq/eudaq/pxar"
 ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${PXARPATH}/lib:/eudaq/eudaq/lib"
 ENV PYTHONPATH="${PYTHONPATH}:/eudaq/eudaq/lib:/eudaq/eudaq/python"
 ENV PATH="${PATH}:/rootfr/root/bin:/eudaq/eudaq/bin"

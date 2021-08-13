@@ -63,8 +63,8 @@ else
     echo "4.   git pull upstream" 
     echo "======================================================="
     # Copying files for the TLU 
-    tar xzf ${DOCKERDIR}/ZestSC1.tar.gz -C ${CODEDIR}/extern 
-    tar xzf ${DOCKERDIR}/tlufirmware.tar.gz -C ${CODEDIR}/extern
+    tar xzf ${DOCKERDIR}/ZestSC1.tar.gz -C ${CODEDIR}
+    tar xzf ${DOCKERDIR}/tlufirmware.tar.gz -C ${CODEDIR}
 fi
 
 # 3. Fill the place-holders of the .templ-Dockerfile 
