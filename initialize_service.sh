@@ -35,7 +35,7 @@ then
     TLUCH=$(which tlunoroot)
     if [ "X${TLUCH}" == "X" ]; 
     then
-        sudo g++ -o /usr/bin/tlunoroot /eudaq2/eudaq2/producers/tlu/src/tlunoroot.cxx -lusb
+        sudo g++ -o /usr/bin/tlunoroot /eudaq/eudaq/producers/tlu/src/tlunoroot.cxx -lusb
         TLUCH=$(which tlunoroot)
         if [ "X${TLUCH}" == "X" ]; 
         then

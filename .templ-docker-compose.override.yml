@@ -6,10 +6,10 @@ services:
         volumes:
             - type: bind
               source: @CODEDIR
-              target: /eudaq2/eudaq2
-        entrypoint: "/bin/bash -c '. /eudaq2/ilcsoft/v01-19-02/Eutelescope/master/build_env.sh \
-                     && mkdir -p /eudaq2/eudaq2/build \
-                     && cd /eudaq2/eudaq2/build \
+              target: /eudaq/eudaq
+        entrypoint: "/bin/bash -c '. /eudaq/ilcsoft/v01-19-02/Eutelescope/master/build_env.sh \
+                     && mkdir -p /eudaq/eudaq/build \
+                     && cd /eudaq/eudaq/build \
                      && rm -rf * \ 
                      && cmake .. -DBUILD_tlu=ON -DBUILD_python=ON -DBUILD_ni=ON \
                      && make -j4 install'"
@@ -20,7 +20,7 @@ services:
             - /tmp/.X11-unix:/tmp/.X11-unix
             - type: bind
               source: @CODEDIR
-              target: /eudaq2/eudaq2
+              target: /eudaq/eudaq
         environment:
             - DISPLAY=unix${DISPLAY}
         networks:
@@ -33,7 +33,7 @@ services:
             - /tmp/.X11-unix:/tmp/.X11-unix
             - type: bind
               source: @CODEDIR
-              target: /eudaq2/eudaq2
+              target: /eudaq/eudaq
             - /dev/bus/usb:/dev/bus/usb
         privileged: true
         environment:
@@ -46,24 +46,24 @@ services:
         volumes:
             - type: bind
               source: @CODEDIR
-              target: /eudaq2/eudaq2
+              target: /eudaq/eudaq
     
     logCollector:
         volumes:
             - type: bind
               source: @CODEDIR
-              target: /eudaq2/eudaq2
+              target: /eudaq/eudaq
 
     dataCollector:
         volumes:
             - type: bind
               source: @CODEDIR
-              target: /eudaq2/eudaq2
+              target: /eudaq/eudaq
     onlineMonitor:
         volumes:
             - type: bind
               source: @CODEDIR
-              target: /eudaq2/eudaq2
+              target: /eudaq/eudaq
     
     TLU:
         image: claralasa/eudaqv2:latest
@@ -72,7 +72,7 @@ services:
             - /dev/bus/usb:/dev/bus/usb
             - type: bind
               source: @CODEDIR
-              target: /eudaq2/eudaq2
+              target: /eudaq/eudaq
         privileged: true
         environment:
             - DISPLAY=unix${DISPLAY}
@@ -94,7 +94,7 @@ services:
             - /tmp/.X11-unix:/tmp/.X11-unix
             - type: bind
               source: @CODEDIR
-              target: /eudaq2/eudaq2
+              target: /eudaq/eudaq
         environment:
             - DISPLAY=unix${DISPLAY}
         depends_on:

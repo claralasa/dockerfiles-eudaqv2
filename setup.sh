@@ -9,7 +9,7 @@
 # container. It will create in the host machine
 #  - $HOME/eudaq_data/logs -> the logs files created by the logger
 #  - $HOME/eudaq_data/data -> the raw data
-#  - $HOME/repos/eudaq2     -> the cloned EUDAQ2 source
+#  - $HOME/repos/eudaq     -> the cloned EUDAQ2 source
 #  - the docker-compose yaml files 
 # 
 # clarsa.lasaosa.garcia@cern.ch (CERN/IFCA)
@@ -34,7 +34,7 @@ fi
 DOCKERDIR=${PWD}
 
 # 3. Download the code: XXX This can be done in the image actually
-CODEDIR=${HOME}/PhD/TESTBEAM_v2/repos/eudaq2
+CODEDIR=${HOME}/PhD/TESTBEAM_v2/repos/eudaq
 mkdir -p ${CODEDIR} && cd ${CODEDIR}/.. ;
 if [ "X$(command -v git)" == "X" ];
 then
@@ -43,7 +43,7 @@ then
 fi
 
 echo "Cloning EUDAQ into : $(pwd)"
-git clone https://github.com/claralasa/eudaq.git eudaq2
+git clone https://github.com/claralasa/eudaq.git eudaq
 
 if [ "$?" -eq 128 ];
 then

@@ -15,7 +15,7 @@ LABEL author="clara.lasaosa.garcia@cern.ch" \
 CMD ["/sbin/my_init"]
 
 # Place at the directory
-WORKDIR /eudaq2
+WORKDIR /eudaq
 
 # Install all dependencies
 RUN apt-get update \ 
@@ -64,20 +64,20 @@ ENV PYTHONPATH /rootfr/root/lib
 
 # download the code, checkout the release and compile
 # This will be used only for production!
-# For development case, the /eudaq2/eudaq2 directory
+# For development case, the /eudaq/eudaq directory
 # is "bind" from the host computer 
 RUN git clone -b v2.4.6 --single-branch https://github.com/claralasa/eudaq.git \ 
-  && cd eudaq2 \ 
-  && mkdir -p /eudaq2/eudaq2/extern/ZestSC1 \ 
-  && mkdir -p /eudaq2/eudaq2/extern/tlufirmware
+  && cd eudaq \ 
+  && mkdir -p /eudaq/eudaq/extern/ZestSC1 \ 
+  && mkdir -p /eudaq/eudaq/extern/tlufirmware
 
 # COPY The needed files for the TLU and pxar (CMS phase one pixel)
-COPY ZestSC1.tar.gz /eudaq2/eudaq2/extern/ZestSC1.tar.gz
-COPY tlufirmware.tar.gz /eudaq2/eudaq2/extern/tlufirmware.tar.gz
-COPY libftd2xx-x86_64-1.4.22.tgz /eudaq2/eudaq2/extern/libftd2xx-x86_64-1.4.22.tgz
+COPY ZestSC1.tar.gz /eudaq/eudaq/extern/ZestSC1.tar.gz
+COPY tlufirmware.tar.gz /eudaq/eudaq/extern/tlufirmware.tar.gz
+COPY libftd2xx-x86_64-1.4.22.tgz /eudaq/eudaq/extern/libftd2xx-x86_64-1.4.22.tgz
 
 # Untar files and continue with the compilation
-RUN cd /eudaq2/eudaq2 \ 
+RUN cd /eudaq/eudaq \ 
   && tar xzf extern/ZestSC1.tar.gz -C extern && rm extern/ZestSC1.tar.gz \
   && tar xzf extern/tlufirmware.tar.gz -C extern && rm extern/tlufirmware.tar.gz \
   # The pxar library for CMS phase I pixel
@@ -90,7 +90,7 @@ RUN cd /eudaq2/eudaq2 \
   && git clone https://github.com/psi46/pixel-dtb-firmware extern/pixel-dtb-firmare \ 
   && git clone https://github.com/psi46/pxar.git extern/pxar && cd extern/pxar && git checkout production \ 
   && mkdir -p build && cd build && cmake .. && make -j4 install \ 
-  && cd /eudaq2/eudaq2 \ 
+  && cd /eudaq/eudaq \ 
   # End pxar library 
   && mkdir -p build \ 
   && cd build \ 
@@ -98,10 +98,10 @@ RUN cd /eudaq2/eudaq2 \
   && make -j4 install
 # STOP ONLY FOR PRODUCTION
 
-ENV PXARPATH="/eudaq2/eudaq2/extern/pxar"
-ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${PXARPATH}/lib:/eudaq2/eudaq2/lib"
-ENV PYTHONPATH="${PYTHONPATH}:/eudaq2/eudaq2/lib:/eudaq2/eudaq2/python"
-ENV PATH="${PATH}:/rootfr/root/bin:/eudaq2/eudaq2/bin"
+ENV PXARPATH="/eudaq/eudaq/extern/pxar"
+ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${PXARPATH}/lib:/eudaq/eudaq/lib"
+ENV PYTHONPATH="${PYTHONPATH}:/eudaq/eudaq/lib:/eudaq/eudaq/python"
+ENV PATH="${PATH}:/rootfr/root/bin:/eudaq/eudaq/bin"
 
 COPY initialize_service.sh /usr/bin/initialize_service.sh
 
@@ -113,6 +113,6 @@ RUN useradd -md /home/eudaquser -ms /bin/bash -G sudo eudaquser \
   && echo "eudaquser ALL=(ALL) NOPASSWD: ALL\n" >> /etc/sudoers 
 # Give previously created folders ownership to the user
 RUN chown -R eudaquser:eudaquser /logs && chown -R eudaquser:eudaquser /data \
-  && chown -R eudaquser:eudaquser /eudaq2
+  && chown -R eudaquser:eudaquser /eudaq
 USER eudaquser
 
