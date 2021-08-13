@@ -1,0 +1,83 @@
+version: "3.9"
+
+services:
+    eudaqv2:
+        build: .
+        image: claralasa/eudaqv2:latest
+    
+    runControl:
+        image: claralasa/eudaqv2:latest
+        volumes:
+            - /tmp/.X11-unix:/tmp/.X11-unix
+        environment:
+            - DISPLAY=unix${DISPLAY}
+        depends_on:
+            - "eudaqv2"
+        networks:
+            static_network:
+                ipv4_address: 172.20.128.2
+        entrypoint: 
+            - initialize_service.sh
+            - runControl
+    
+    logCollector:
+        image: claralasa/eudaqv2:latest
+        volumes:
+            - /tmp/.X11-unix:/tmp/.X11-unix
+            - type: bind
+              source: @LOGSDIR
+              target: /logs
+        environment:
+            - DISPLAY=unix${DISPLAY}
+        depends_on:
+            - "runControl"
+        networks:
+            static_network:
+                ipv4_address: 172.20.128.3
+        entrypoint: 
+            - initialize_service.sh
+            - logCollector
+
+    dataCollector:
+        image: claralasa/eudaqv2:latest
+        volumes:
+            - /tmp/.X11-unix:/tmp/.X11-unix
+            - type: bind
+              source: @DATADIR
+              target: /data
+        environment:
+            - DISPLAY=unix${DISPLAY}
+        depends_on:
+            - "runControl"
+            - "logCollector"
+        networks:
+            static_network:
+                ipv4_address: 172.20.128.4
+        entrypoint: 
+            - initialize_service.sh
+            - dataCollector
+
+    onlineMonitor:
+        image: claralasa/eudaqv2:latest
+        volumes:
+            - /tmp/.X11-unix:/tmp/.X11-unix
+            - type: bind
+              source: @DATADIR
+              target: /data
+        environment:
+            - DISPLAY=unix${DISPLAY}
+        depends_on:
+            - "runControl"
+            - "logCollector"
+        networks:
+            static_network:
+                ipv4_address: 172.20.128.5
+        entrypoint: 
+            - initialize_service.sh
+            - onlineMonitor
+
+networks:
+    static_network:
+        ipam:
+            config:
+                - subnet: 172.20.0.0/16

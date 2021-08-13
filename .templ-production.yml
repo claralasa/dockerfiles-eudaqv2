@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+    NIProducer:
+        image: claralasa/eudaqv2:latest
+        volumes:
+            - /tmp/.X11-unix:/tmp/.X11-unix
+        environment:
+            - DISPLAY=unix${DISPLAY}
+        depends_on:
+            - "runControl"
+            - "logCollector"
+            - "dataCollector"
+        networks:
+            static_network:
+                ipv4_address: 172.20.128.6
+        entrypoint: 
+            - initialize_service.sh
+            - NIProducer
+
+    TLU:
+        image: claralasa/eudaqv2:latest
+        volumes:
+            - /tmp/.X11-unix:/tmp/.X11-unix
+            - /dev/bus/usb:/dev/bus/usb
+        privileged: true
+        environment:
+            - DISPLAY=unix${DISPLAY}
+        depends_on:
+            - "runControl"
+            - "logCollector"
+            - "dataCollector"
+        networks:
+            static_network:
+                ipv4_address: 172.20.128.7
+        entrypoint: 
+            - initialize_service.sh
+            - TLU
